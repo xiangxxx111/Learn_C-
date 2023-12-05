@@ -5,7 +5,7 @@
 
 底层 const 是指指针或引用本身是 const 的情况。它影响的是指针或引用所指向的对象。
 底层 const 表示指针或引用所指向的数据是常量，不能通过这个指针或引用来修改数据。
-```
+```cpp
 const int value = 42;
 const int* constPtr = &value;  // 底层const指针
 ```
@@ -15,7 +15,7 @@ const int* constPtr = &value;  // 底层const指针
 
 顶层 const 是指指针或引用所指向的数据是 const 的情况。它影响的是指针或引用所指向的对象的 const 属性。
 顶层 const 表示数据本身是常量，不能通过其他非 const 的方式来修改数据。
-```
+```cpp
 int value = 42;
 const int* ptrToConst = &value;  // 顶层const指针
 ```
