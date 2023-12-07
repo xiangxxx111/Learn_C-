@@ -44,3 +44,14 @@ int main(int argc,char* argv[]){
     std::cout<<result<<std::endl;
 }
 ```
+### 重载函数的指针
+当存在有重载函数时，函数指针的匹配顿寻精确匹配原则
+```cpp
+void ff(int*);
+void ff(unsigned int);
+//定义了两个重载函数
+void (*pf1)(unsigned int) = ff;//根据精确匹配原则，函数指针指向第二个ff函数
+
+void (*pf2)(int) = ff;//错误，并没有合适的重载函数与之配对
+int *(*pf3)(int*) = ff;//错误，虽然形参类型一致，但返回类型不同
+```
