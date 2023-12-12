@@ -1,4 +1,5 @@
-### 函数指针的声明
+# C++函数指针
+## 函数指针的声明
 ```cpp
 returnType (*pointerName)(parameterType1,parameterType2,...);
 //returnType 是函数的返回类型
@@ -6,23 +7,23 @@ returnType (*pointerName)(parameterType1,parameterType2,...);
 //parameterType1,parameterType2 等是函数的形参类型
 //注意，这里形参类型不一定需要提供形参名
 ```
-##### 无形参类型
+### 无形参类型
 ```cpp
 int (*funcPtr)();
 ```
-##### 有形参类型
+### 有形参类型
 ```cpp
 int (*sum_Ptr)(int,int);//int类型形参
 ```
 ```cpp
 void (*show_Ptr)(const char*);//char*类型形参
 ```
-##### 使用typedef简化函数指针的声明
+### 使用typedef简化函数指针的声明
 ```cpp
 typedef int(*def_func_ptr)();//typedef简化函数声明
 def_func_ptr func();//使用简化后的声明来定义函数指针
 ```
-### 函数指针的使用
+## 函数指针的使用
 ```cpp
 #include<iostream>
 
@@ -44,7 +45,7 @@ int main(int argc,char* argv[]){
     std::cout<<result<<std::endl;
 }
 ```
-### 重载函数的指针
+## 重载函数的指针
 当存在有重载函数时，函数指针的匹配遵循精确匹配原则
 ```cpp
 void ff(int*);
