@@ -45,7 +45,7 @@ int main(int argc,char* argv[]){
 }
 ```
 ### 重载函数的指针
-当存在有重载函数时，函数指针的匹配顿寻精确匹配原则
+当存在有重载函数时，函数指针的匹配遵循精确匹配原则
 ```cpp
 void ff(int*);
 void ff(unsigned int);
