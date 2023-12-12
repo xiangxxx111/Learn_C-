@@ -66,4 +66,36 @@ int main(void) {
 	return 0;
 }
 ```
-### 成员函数的友元
+### 其他类中的成员函数作友元
+成员函数声明友元时，要注意声明的顺序，在声明其它类的成员函数时，需要保证友元声明前该类已经完成定义，因为类只有在完成定义之后才能访问其内部成员，编译器先执行声明操作，随后再执行函数定义，如果友元声明时类未完成定义，那么友元声明就不会执行。
+```cpp
+#include<iostream>
+class Son;
+
+class Father {
+public:
+	int add(Son s);
+};
+
+class Son {
+	friend int Father::add(Son s);
+private:
+	const int a = 10;
+	const int b = 20;
+};
+
+int Father::add(Son s) {
+	return s.a + s.b;
+}
+
+void test01() {
+	Father f;
+	Son s;
+	int ans = f.add(s);
+	std::cout << ans << std::endl;
+}
+int main(void) {
+	test01();
+	return 0;
+}
+```
