@@ -1,24 +1,29 @@
 # C++ 中的底层 const 和顶层 const
 主要区别在于它们应用的位置和影响的范围。
 
-底层 const：
-
-底层 const 是指指针或引用本身是 const 的情况。它影响的是指针或引用所指向的对象。
-底层 const 表示指针或引用所指向的数据是常量，不能通过这个指针或引用来修改数据。
-```cpp
-const int value = 42;
-const int* constPtr = &value;  // 底层const指针
-```
-在上述例子中，constPtr 是一个底层 const 指针，意味着不能通过 constPtr 来修改 value 的值。
-
 顶层 const：
 
-顶层 const 是指指针或引用所指向的数据是 const 的情况。它影响的是指针或引用所指向的对象的 const 属性。
-顶层 const 表示数据本身是常量，不能通过其他非 const 的方式来修改数据。
+顶层 const 是指指针或引用本身是 const 的情况。它影响的是指针或引用本身，因为指针指向一个地址，也就是地址是一个常量。
+顶层 const 表示指针或引用本身常量，不能修改该指针指向的地址。
 ```cpp
 int value = 42;
-const int* ptrToConst = &value;  // 顶层const指针
+int n_value = 10;
+int* const const_ptr = &value;  // 顶层const指针
+const_ptr = &n_value; //错误，顶层const修饰的指针是常量，不可更改指向地址
 ```
-在上述例子中，ptrToConst 是一个顶层 const 指针，这意味着不能通过 ptrToConst 来修改 value 的值。
 
-总体来说，底层 const 主要涉及指针或引用的常量性，而顶层 const 主要涉及数据本身的常量性。在处理函数参数、返回值、指针和引用时，理解这两种 const 是非常重要的，特别是在涉及到函数签名和函数重载时。
+
+底层 const：
+
+底层 const 是指指针或引用所指向的数据是 const 的情况。它影响的是指针或引用所指向的对象的 const 属性。
+底层 const 表示指向的数据是常量，不能修改数据。
+```cpp
+int value = 42;
+const int* ptr_to_const = &value;  // 底层const指针
+value = 10; //正确，所谓指向常量的指针中的常量，只是相对于指针来说的，只是因为我们无法通过指针来修改它的值，对于其具体的形式，完全可以是一个变量，可以通过简单的赋值语句来改变这个所谓的常量的值
+//所以与其称它为常量造成混淆，不如直接称它为一个“伪常量”，或者一个“通过指针看起来像常量的值”
+*ptr_t_const = 100; //错误，底层const不允许通过指针修改数据
+```
+在上述例子中，ptr_to_const 是一个底层 const 指针，这意味着不能通过 ptr_to_const 来修改 value 的值。
+
+总体来说，顶层 const 主要涉及指针或引用的常量性，而底层 const 主要涉及数据本身的常量性。在处理函数参数、返回值、指针和引用时，理解这两种 const 是非常重要的，特别是在涉及到函数签名和函数重载时。
