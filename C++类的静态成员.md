@@ -1,0 +1,117 @@
+# C++类的静态成员
+## 声明并使用静态成员
+```
+使用static关键字将其与类关联在一块，同样，static声明的对象也可以声明访问权限public,private
+```
+注意，类的静态成员存在于任何对象之外，对象中不包含任何与静态数据有关的数据，就是说类中声明的静态成员是独立于类而存在的，只是和类相关联（这里的独立并不是完全的独立，静态成员还是类中的成员），只存在唯一的该静态成员对象，但其可被所有的类对象共享。
+```
+所以声明的静态成员函数是可以直接通过类来直接调用的，无需创建一个类对象来调用。
+```
+```
+还有一点，static声明的静态成员是不包含this指针的（包括隐式的this指针），所以静态成员函数是无法调用类中的非静态成员或函数的
+```
+接下来举一个例子
+```cpp
+#include<iostream>
+
+class Print {
+private:
+	int a = 10;
+	static constexpr int b = 20; //这里的constexpr接下来将要说明它的作用，这里是用于静态成员的类内初始化
+public:
+	static void show() {
+    //std::cout << a << std::endl; //这里将导致错误，因为对于静态成员函数无法调用类中的非静态成员
+		std::cout << b << std::endl;
+	}
+};
+
+int main(void) {
+	Print::show(); //可以直接通过类来调用一个静态成员函数，而无需通过一个类对象来完成
+	return 0;
+}
+```
+## 定义静态成员及其初始化
+同样，我们也可以在类的外部定义一个静态成员变量，但当我们在外部定义时，不可以重复static关键字，其只能出现在类内的静态成员函数声明中
+```cpp
+void Print::show() {
+	std::cout << b << std::endl;
+}//类外定义静态成员函数时省略了static关键字
+```
+```
+因为静态数据成员不属于类的任何一个对象，所以它们并不是由类的构造函数进行初始化的，
+一般来说，我们不能在类的内部初始化静态成员，且一个静态成员不可重定义
+```
+所以我们一般在类外初始化一个静态成员，如下例：
+```cpp
+#include<iostream>
+
+class Print {
+private:
+	int a = 10;
+	static  int b;
+public:
+	static void show();
+};
+int Print::b = 20;
+
+void Print::show() {
+	std::cout << b << std::endl;
+}
+
+int main(void) {
+	Print::show();
+	return 0;
+}
+```
+注意，这里虽然b是属于类中的一个私有成员，但依然可以使用它，并对其进行初始化，这里的引用方法与之前的静态成员函数相同，可以直接通过类来进行访问
+## 静态成员的类内初始化
+我们可以为静态成员提供const整数类型的类内初始值，这里要求静态成员必须是字面值常量类型（constexpr）
+```cpp
+#include<iostream>
+
+class Print {
+private:
+	int a = 10;
+	static constexpr int b = 20; //这里的constexpr声明了b是一个字面值常量类型，从而可以被一个const值进行类内初始化
+public:
+	static void show() {
+    //std::cout << a << std::endl; //这里将导致错误，因为对于静态成员函数无法调用类中的非静态成员
+		std::cout << b << std::endl;
+	}
+};
+```
+一般建议对类中的静态成员进行类外初始化，而不是进行类内初始化
+## 适用于静态成员的情况
+### 静态成员可以是一个不完全类型
+静态变量可以是一个不完全类型，所谓不完全类型，就是指在声明时可以不提供其完整定义而只是提供一个声明，一般用于创建指向该类型的指针或引用，或者用于声明函数的参数或返回类型，但只有当其拥有完整定义时，才可以进行实例化操作
+```cpp
+#include<iostream>
+
+class Print {
+public:
+	//
+private:
+	static Print exam1; //static修饰的静态成员可以是一个不完全类型
+	Print* exam2; //指针类型也可以是一个不完全类型
+	//Print exam3; //普通的数据成员不可以是不完全类型
+};
+```
+### 静态成员可以作为默认实参
+默认实参，其具体值在编译时就已经确定，而非静态数据成员是在声明编译完成后调用构造函数进行初始化，所以非静态数据成员无法用于默认实参
+```cpp
+class Print {
+
+private:
+	static int a;
+	int b = 20;
+public:
+	int show(int value = a) { //正确，a为静态数据成员，可以用于默认实参的构造
+		return a;
+	}
+	int err_show(int value = b) { //错误，因为b是非静态数据成员，而非静态数据成员无法用于默认实参的构造
+		return b;
+	}
+};
+
+int Print::a = 10;
+```
