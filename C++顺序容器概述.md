@@ -122,6 +122,87 @@ std::array<int, 10> arr{ 1,2,4,5,3,6,7,8,9,10 }; //初始化array容器，声明
 ```
 且该容器支持拷贝和赋值操作
 ```cpp
-
-
+std::array<int, 10> arr{ 1,2,3,4,5,6,7,8,9,10 };
+std::array<int, 10> ar = arr; //支持，只要保证数组类型匹配即可
 ```
+### 赋值与swap
+与内置数组不同，array支持赋值操作，但赋值等号两边必须是相同类型  
+由于左右两边运算对象大小可能不同，所以array类型不支持assign和花括号赋值操作
+#### assign操作（仅限顺序容器）
+assign允许我们从一个不同但相容的类型赋值（即容器的类型可以不同，但元素类型应相同），或者从容器的一个子序列赋值。
+```cpp
+#include<iostream>
+#include<vector>
+#include<array>
+
+std::vector<int> vec{ 1,2,3,4,5,6,7,8,9,10 };
+std::vector<int> n_vec{ 1,2,3,4,5 };
+
+int main(void) {
+	show(n_vec);
+	std::cout << std::endl;
+	n_vec.assign(vec.begin(), vec.end());
+	show(n_vec);
+	return 0;
+}
+//结果为：
+//1 2 3 4 5
+//1 2 3 4 5 6 7 8 9 10
+//assgin的第一个版本，接受两个迭代器，将目标容器中的元素全部替换成两个迭代器之间的值
+//该操作可能改变目标容器中元素的个数。
+```
+assign的第二个版本是接受一个整数型和一个元素值。它用指定数目且具有相同给定值的元素替换容器中的原有的元素，这里还是有可能改变容器中元素的个数
+```cpp
+#include<iostream>
+#include<vector>
+
+std::vector<int> vec{ 1,2,3,4,5,6,7,8,9,10 };
+int main(void) {
+	show(vec);
+	std::cout << std::endl;
+	vec.assign(5, 1); //这里改变了vec容器的大小
+	show(vec);
+
+	return 0;
+}
+```
+#### swap函数
+swap交换两个相同类型容器的内存
+```cpp
+#include<iostream>
+#include<vector>
+
+std::vector<int> vec{ 1,2,3 };
+std::vector<int> s_vec{ 4,5,6,7 };
+
+int main(void) {
+	show(s_vec);
+	std::cout << std::endl;
+	show(vec);
+	std::cout << std::endl;
+
+	vec.swap(s_vec);
+	show(s_vec);
+	std::cout << std::endl;
+	show(vec);
+	std::cout << std::endl;
+
+	return 0;
+}
+```
+这里还要保证容器中的元素类型相同，才可以调用swap操作进行交换  
+对于array容器来说，swap函数的具体实现与其他容器不同，其他容器只是交换了两个容器内部的数据结构，而并没有交换元素本身；而对于array容器来说，swap会真正交换它们的元素，所以交换两个array容器的时间与元素数量成正比
+```cpp
+#include<iostream>
+#include<vector>
+#include<array>
+
+std::array<int, 10> ar{ 1,2,3,4,5,6,7,8,9,10 };
+std::array<int, 10> arr{ 5,4,3,2,1,6,7,8,9,10 };
+
+int main(void) {
+	arr.swap(ar);
+	return 0;
+}
+```
+对于array的交换，不仅需要保证容器类型和元素类型相同，还要保证每个array中的元素个数相同，这样才能完成交换操作
