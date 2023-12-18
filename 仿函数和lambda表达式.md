@@ -43,6 +43,18 @@ auto function_name = [](int T, ...)->decltype(T) {return T; };
 // 这里的->表示一个尾置返回一般用于decltype声明的返回类型和较为复杂的返回类型
 // {}中的是lambda表达式的函数体，如果函数体只是一个return语句，则返回类型由返回的表达式来推断，否则，返回类型为void
 ```
+注意：模板中的参数列表和返回类型可以省略，但是必须永远包含捕获列表和函数体。  
+这里的返回类型指的是lambda表达式所要求的尾置返回类型，对于大括号中的return语句，不受影响，因为它属于函数体中的内容。
+```cpp
+#include<iostream>
+auto func = [] {return 10; };
+// 这里的func函数省略了参数列表和返回类型，对于器返回类型，只要它不是复杂类型，编译器可以推导出返回类型
+
+int main(void) {
+	std::cout << func() << std::endl;
+	return 0;
+}
+```
 下面再演示一下捕获列表内不为空的情况
 ```cpp
 #include<iostream>
