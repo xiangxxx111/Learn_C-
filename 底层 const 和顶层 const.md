@@ -1,4 +1,4 @@
-# C++ 中的底层 const 和顶层 const
+# 底层 const 和顶层 const
 主要区别在于它们应用的位置和影响的范围。
 
 顶层 const：
