@@ -1,4 +1,4 @@
-# C++String容器操作
+# String容器操作
 ## 构造String容器的其他方法
 ```cpp
 string str(char_arr,n); //这里的str_arr表示一个const char*数组，n表示拷贝该数组中前n个元素到string容器中
