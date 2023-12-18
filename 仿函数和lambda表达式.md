@@ -43,3 +43,69 @@ auto function_name = [](int T, ...)->decltype(T) {return T; };
 // 这里的->表示一个尾置返回一般用于decltype声明的返回类型和较为复杂的返回类型
 // {}中的是lambda表达式的函数体，如果函数体只是一个return语句，则返回类型由返回的表达式来推断，否则，返回类型为void
 ```
+下面再演示一下捕获列表内不为空的情况
+```cpp
+#include<iostream>
+
+auto add = [c = 30](int a, int b) ->decltype(a + b) {return a + b + c; };
+// 注意，这里捕获列表中的值，只限于在函数体中才能使用，也就是必须在大括号内的内容才可以使用捕获列表中的值
+// 捕获列表中不可以使用全局变量或静态变量
+// 捕获列表中的值无需声明类型，编译器会自动推导器类型
+int main(void) {
+	int ans = add(10, 20);
+	std::cout << ans << std::endl;
+	return 0;
+}
+```
+### 捕获列表
+捕获列表的使用分为三种形式
+#### 1. 值捕获
+```cpp
+#include<iostream>
+	int main(void) {
+	int x = 5;
+	auto lambda = [x]() {std::cout << x << std::endl;};
+	return 0;
+}
+```
+使用外部变量的值创建lambda的副本。捕获后，lambda函数体内不能修改这些变量的值。  
+注意，这里只是外部变量的拷贝而非引用  
+  
+#### 2. 引用捕获
+```cpp
+#include<iostream>
+int main(void) {
+	int y = 10;
+	auto lambda_ref = [&y]() {y++; std::cout << y << std::endl; }; //无return语句，默认返回void
+	return 0;
+}
+```
+使用外部变量的引用。捕获后，lambda函数体内可以修改这些变量的值。  
+注意，是在函数体内修改  
+  
+#### 3. 隐式捕获
+###### (1) 按值隐式捕获
+```cpp
+#include<iostream>
+int main(void) {
+	int a = 3, b = 7;
+	auto lambda_implicit = [=]() {std::cout << a + b << std::endl;};
+
+	return 0;
+}
+```
+##### (2) 按引用隐式捕获
+```cpp
+#include<iostream>
+int main(void) {
+	int aa = 10;
+	int& a = aa;
+	auto lambda_implicit_ref = [&]() {std::cout << a << std::endl; };
+
+	lambda_implicit_ref();
+	return 0;
+}
+```
+ 由捕获列表的=或&表示。= 表示按值捕获，& 表示按引用捕获。通过使用 = 或 & ，可以捕获所有可见的外部变量。  
+ 这两种捕获同上述捕获的特性一样，比如引用捕获可以修改捕获列表的值
+ 
